@@ -4,6 +4,7 @@ import seaborn as sns
 
 model = TabularPredictor.load('./ag-lightgbm-only (1)', require_py_version_match=False)
 history = pd.read_csv("./final_dataset (2).csv")
+history = history[["MatchDate", "HomeTeam", "AwayTeam", "FT_Home_Score", "FT_Away_Score", "FTResult"]]
 
 class SportPredictor:
     def __init__(self,HomeTeam, AwayTeam, MatchDate):
