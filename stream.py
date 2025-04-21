@@ -41,19 +41,40 @@ class SportPredictor:
         
     @property
     def get_homeTeam_past_data(self):
+        # this is the dataframe that the HomeTeam has Played
         homeTeamData = history[(history.HomeTeam == self.HomeTeam) | (history.AwayTeam == self.HomeTeam)]
-        home_wins = homeTeamData[homeTeamData['FTResult'] == 'H']
+
+        hometeamer = homeTeamData[["HomeTeam","FTResult"]]
+        awayteamer=homeTeamData[["AwayTeam","FTResult"]]
+
+        # hometeam in AwayColumn
+        homeTeam_win_in_awayCol = awayteamer[(awayteamer.AwayTeam==self.HomeTeam) & (awayteamer.FTResult=="A")]
+        # hometeam in homeColumn
+        homeTeam_win_in_homeCol = hometeamer[(hometeamer.HomeTeam==self.HomeTeam) & (awayteamer.FTResult=="H")]
+
+        # total wins
+        home_wins = len(homeTeam_win_in_awayCol) + len(homeTeam_win_in_homeCol)
+
+        # total matches played
         total_game = len(homeTeamData)
-        wins = len(home_wins)
-        game_score: str = f"{wins} out of {total_game} wins. Which Means {self.HomeTeam} lost {total_game - wins}. Having a winning rate of {(wins / total_game) * 100:.2f}%"
+
+        # response
+        game_score: str = f"{self.HomeTeam} wins {home_wins} matches out of {total_game} games, loosing {total_game - home_wins} games. Hence, Having a winning rate of {(home_wins / total_game) * 100:.2f}%"
         return homeTeamData, game_score
+    
     @property
     def get_awayTeam_past_data(self):
         awayTeamData = history[(history.HomeTeam == self.AwayTeam) | (history.AwayTeam == self.AwayTeam)]
-        away_wins = awayTeamData[awayTeamData['FTResult'] == 'H']
+        hometeamer = awayTeamData[["HomeTeam","FTResult"]]
+        awayteamer = awayTeamData[["AwayTeam","FTResult"]]
+        
+        awayTeam_win_in_awayCol = awayteamer[(awayteamer.AwayTeam==self.AwayTeam) & (awayteamer.FTResult=="A")]
+        awayTeam_win_in_homeCol = hometeamer[(hometeamer.HomeTeam==self.AwayTeam) & (awayteamer.FTResult=="H")]
+
+        away_wins = len(awayTeam_win_in_awayCol) + len(awayTeam_win_in_homeCol)
         total_game = len(awayTeamData)
-        wins = len(away_wins)
-        game_score: str = f"{wins} out of {total_game} wins. Which Means {self.AwayTeam} lost {total_game - wins}. Having a winning rate of {(wins / total_game) * 100:.2f}%"
+
+        game_score: str = f"{self.AwayTeam} wins {away_wins} matches out of {total_game} games, loosing {total_game - away_wins} games. Hence, Having a winning rate of {(away_wins / total_game) * 100:.2f}%"
         return awayTeamData, game_score
     @property
     def histogram_homeTeam(self):
