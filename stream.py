@@ -45,7 +45,7 @@ class SportPredictor:
         home_wins = homeTeamData[homeTeamData['FTResult'] == 'H']
         total_game = len(homeTeamData)
         wins = len(home_wins)
-        game_score: str = f"{wins} out of {total_game} wins. Which Means {self.HomeTeam} lost {total_game - wins}. Having a winning rate of {round(wins/total_game)}%"
+        game_score: str = f"{wins} out of {total_game} wins. Which Means {self.HomeTeam} lost {total_game - wins}. Having a winning rate of {(wins / total_game) * 100:.2f}%"
         return homeTeamData, game_score
     @property
     def get_awayTeam_past_data(self):
@@ -53,7 +53,7 @@ class SportPredictor:
         away_wins = awayTeamData[awayTeamData['FTResult'] == 'H']
         total_game = len(awayTeamData)
         wins = len(away_wins)
-        game_score: str = f"{wins} out of {total_game} wins. Which Means {self.AwayTeam} lost {total_game - wins}. Having a winning rate of {round(wins/total_game)}%"
+        game_score: str = f"{wins} out of {total_game} wins. Which Means {self.AwayTeam} lost {total_game - wins}. Having a winning rate of {(wins / total_game) * 100:.2f}%"
         return awayTeamData, game_score
     @property
     def histogram_homeTeam(self):
