@@ -41,42 +41,42 @@ class SportPredictor:
         
     @property
     def get_homeTeam_past_data(self):
-        # this is the dataframe that the HomeTeam has Played
-        homeTeamData = history[(history.HomeTeam == self.HomeTeam) | (history.AwayTeam == self.HomeTeam)]
+        homeTeamData = history[
+            (history.HomeTeam == self.HomeTeam) | (history.AwayTeam == self.HomeTeam)
+        ]
+        hometeamer = homeTeamData[["HomeTeam", "FTResult"]]
+        awayteamer = homeTeamData[["AwayTeam", "FTResult"]]
 
-        hometeamer = homeTeamData[["HomeTeam","FTResult"]]
-        awayteamer=homeTeamData[["AwayTeam","FTResult"]]
+        homeTeam_win_in_awayCol = awayteamer[
+            (awayteamer.AwayTeam == self.HomeTeam) & (awayteamer.FTResult == "A")
+        ]
+        homeTeam_win_in_homeCol = hometeamer[
+            (hometeamer.HomeTeam == self.HomeTeam) & (hometeamer.FTResult == "H")
+        ]
 
-        # hometeam in AwayColumn
-        homeTeam_win_in_awayCol = awayteamer[(awayteamer.AwayTeam==self.HomeTeam) & (awayteamer.FTResult=="A")]
-        # hometeam in homeColumn
-        homeTeam_win_in_homeCol = hometeamer[(hometeamer.HomeTeam==self.HomeTeam) & (awayteamer.FTResult=="H")]
+        return homeTeamData
 
-        # total wins
-        home_wins = len(homeTeam_win_in_awayCol) + len(homeTeam_win_in_homeCol)
-
-        # total matches played
-        total_game = len(homeTeamData)
-
-        # response
-        game_score: str = f"{self.HomeTeam} wins {home_wins} matches out of {total_game} games, loosing {total_game - home_wins} games. Hence, Having a winning rate of {(home_wins / total_game) * 100:.2f}%"
-        return homeTeamData, game_score
-    
     @property
     def get_awayTeam_past_data(self):
-        awayTeamData = history[(history.HomeTeam == self.AwayTeam) | (history.AwayTeam == self.AwayTeam)]
-        hometeamer = awayTeamData[["HomeTeam","FTResult"]]
-        awayteamer = awayTeamData[["AwayTeam","FTResult"]]
+        awayTeamData = history[
+            (history.HomeTeam == self.AwayTeam) | (history.AwayTeam == self.AwayTeam)
+        ]
         
-        awayTeam_win_in_awayCol = awayteamer[(awayteamer.AwayTeam==self.AwayTeam) & (awayteamer.FTResult=="A")]
-        awayTeam_win_in_homeCol = hometeamer[(hometeamer.HomeTeam==self.AwayTeam) & (awayteamer.FTResult=="H")]
+        head_to_head_matches = history[
+            ((history.HomeTeam == self.HomeTeam) & (history.AwayTeam == self.AwayTeam)) |
+            ((history.HomeTeam == self.AwayTeam) & (history.AwayTeam == self.HomeTeam))
+        ]
+        
+        hometeamer = awayTeamData[["HomeTeam", "FTResult"]]
+        awayteamer = awayTeamData[["AwayTeam", "FTResult"]]
 
-        away_wins = len(awayTeam_win_in_awayCol) + len(awayTeam_win_in_homeCol)
-        total_game = len(awayTeamData)
+        awayTeam_win_in_awayCol = awayteamer[
+            (awayteamer.AwayTeam == self.AwayTeam) & (awayteamer.FTResult == "A")
+        ]
+        awayTeam_win_in_homeCol = hometeamer[
+            (hometeamer.HomeTeam == self.AwayTeam) & (hometeamer.FTResult == "H")
+        ]
 
-        game_score: str = f"{self.AwayTeam} wins {away_wins} matches out of {total_game} games, loosing {total_game - away_wins} games. Hence, Having a winning rate of {(away_wins / total_game) * 100:.2f}%"
-        return awayTeamData, game_score
-    @property
-    def histogram_homeTeam(self):
-        pass
+        return awayTeamData, head_to_head_matches
+
 
