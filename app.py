@@ -27,12 +27,15 @@ if st.button("Predict Match Result"):
 
 if st.button("Check HomeTeam Data"):
     st.subheader(f"Match History for {home_team}")
-    dataframeHome, scoreHome = predictor.get_homeTeam_past_data
-    st.write(scoreHome)
+    dataframeHome = predictor.get_homeTeam_past_data
     st.dataframe(dataframeHome)
-    
+
 if st.button("Check AwayTeam Data"):
     st.subheader(f"Match History for {away_team}")
-    dataframeAway, scoreAway = predictor.get_awayTeam_past_data
-    st.write(scoreAway)
+    dataframeAway, _ = predictor.get_awayTeam_past_data
     st.dataframe(dataframeAway)
+
+if st.button("Check Matches Played Together"):
+    st.subheader(f"Match History for {away_team} and {home_team}")
+    dataframeAway, merged = predictor.get_awayTeam_past_data
+    st.dataframe(merged)
